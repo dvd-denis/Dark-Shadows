@@ -1,0 +1,4 @@
+﻿[*.cs]
+
+# UNT0002: Inefficient tag comparison
+dotnet_diagnostic.UNT0002.severity = none
