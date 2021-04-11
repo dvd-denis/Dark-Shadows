@@ -7,7 +7,10 @@ public class Item : MonoBehaviour
 	{
 		Sword = 0,
 		Heal = 1,
-		Silver = 2
+		Silver = 2,
+		Staff = 3
 	}
 	public Type type;
+
+	public GameObject bullet;
 }

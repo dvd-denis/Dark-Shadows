@@ -54,6 +54,7 @@ MonoBehaviour:
   - {fileID: 3673973874671339509, guid: 5f5061b2b02c457429d3fc56ed5e1388, type: 3}
   - {fileID: 5005971518137850847, guid: f27eadf0e6f02624ba0b307438db66b8, type: 3}
   - {fileID: 8926285596313093244, guid: 2e91b757b5be84f4c809fd6fdc58bcfd, type: 3}
+  - {fileID: 4800604550588662805, guid: 578c41d44bbf6984e9a3b21c911f827b, type: 3}
   - {fileID: 4183939804420332698, guid: b105542a05e18a542a636252748926b5, type: 3}
   currentobject: {fileID: 0}
   text: {fileID: 5893422752351583574}

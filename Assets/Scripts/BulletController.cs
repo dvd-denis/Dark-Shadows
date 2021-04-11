@@ -7,6 +7,7 @@ public class BulletController : MonoBehaviour
 	public enum Type
 	{
 		Defaultbullet = 0,
+		PlayerBullet = 1
 	}
 
 	public float damage = 0.5f;
@@ -14,19 +15,28 @@ public class BulletController : MonoBehaviour
 	public Type type;
     private void Start()
     {
-		damage = Random.Range(0.3f, 0.6f);
+		if (type == Type.Defaultbullet)
+			damage = Random.Range(0.3f, 0.6f);
     }
 
     private void OnTriggerEnter(Collider other)
     {
-		if (other.CompareTag("Player"))
+		if (type == Type.Defaultbullet)
         {
-			if (type == Type.Defaultbullet)
-            {
+			if (other.CompareTag("Player"))
+			{
 				Destroy(gameObject);
 				other.GetComponent<PlayerController>().Damage(damage);
-            }
-        }
+			}
+		}
+		else if (type == Type.PlayerBullet)
+        {
+			if (other.CompareTag("Enemy"))
+			{
+				Destroy(gameObject);
+				other.GetComponent<EnemyController>().hp -= damage;
+			}
+		}
 		Destroy(gameObject, 5f);
 	}
 }

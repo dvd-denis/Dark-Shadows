@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour
     public float attackwait = 1.3f;
 
     public GameObject[] weapons = new GameObject[2];
-    public static int weaponActive = 0;
+    public static int weaponActive = 5;
 
     private Vector3 moveVector;
     private float speedMove = 100;
@@ -35,6 +35,7 @@ public class PlayerController : MonoBehaviour
     private Text finishText;
     private Text silverText;
     private Image UIHp;
+
     private void Start()
     {
         SaveController.LoadStats();
@@ -50,9 +51,10 @@ public class PlayerController : MonoBehaviour
             healText = GameObject.Find("HealText").GetComponent<Text>();
             finishText = GameObject.Find("FinishText").GetComponent<Text>();
             silverText = GameObject.Find("silverText").GetComponent<Text>();
-            
+
         }  catch (Exception) { }
     }
+
     private void FixedUpdate()
     {
         moneyText.text = money.ToString() + "$";
@@ -118,7 +120,10 @@ public class PlayerController : MonoBehaviour
     {
         if (!attack)
         {
-            StartCoroutine(Attack());
+            if (weapons[weaponActive].GetComponent<Item>().type == Item.Type.Sword)
+                StartCoroutine(AttackSword());
+            if (weapons[weaponActive].GetComponent<Item>().type == Item.Type.Staff)
+                StartCoroutine(AttackStaff());
         }
     }
 
@@ -127,10 +132,42 @@ public class PlayerController : MonoBehaviour
         anim.SetTrigger("roll");
     }
 
-    public IEnumerator Attack()
+    public IEnumerator AttackSword()
     {
         attack = true;
         anim.SetTrigger("attack");
+        yield return new WaitForSecondsRealtime(attackwait);
+        attack = false;
+    }
+    public IEnumerator AttackStaff()
+    {
+        attack = true;
+        anim.SetTrigger("attack");
+        GameObject[] enemys = GameObject.FindGameObjectsWithTag("Enemy");
+        float temp = 9999;
+        GameObject enemy = null;
+        if (enemys.Length != 0)
+        {
+            foreach (GameObject go in enemys)
+            {
+                float temp2 = Vector3.Distance(transform.position, go.transform.position);
+                if (temp2 < temp)
+                {
+                    temp = temp2;
+                    enemy = go;
+                }
+            }
+
+            Vector3 newDir = Vector3.RotateTowards(transform.forward, (enemy.transform.position - transform.position), 5, 0.0F);
+
+            transform.rotation = Quaternion.LookRotation(newDir);
+
+
+        }
+        yield return new WaitForSecondsRealtime(0.2f);
+        GameObject BULLET = Instantiate(weapons[weaponActive].GetComponent<Item>().bullet, weapons[weaponActive].transform.position, transform.rotation);
+        BULLET.GetComponent<Rigidbody>().velocity = transform.forward * 10;
+
         yield return new WaitForSecondsRealtime(attackwait);
         attack = false;
     }
@@ -152,6 +189,12 @@ public class PlayerController : MonoBehaviour
                     controller.sold = true;
                 }
                 if (currentItem.type == Item.Type.Sword)
+                {
+                    other.GetComponent<ChestController>().currentobject = Instantiate(weapons[weaponActive], other.transform.TransformPoint(0, 2.4f, 0), other.transform.rotation, other.transform);
+                    other.GetComponent<ChestController>().currentobject.SetActive(true);
+                    weaponSelect(currentItem.id);
+                }
+                else if (currentItem.type == Item.Type.Staff)
                 {
                     other.GetComponent<ChestController>().currentobject = Instantiate(weapons[weaponActive], other.transform.TransformPoint(0, 2.4f, 0), other.transform.rotation, other.transform);
                     other.GetComponent<ChestController>().currentobject.SetActive(true);
