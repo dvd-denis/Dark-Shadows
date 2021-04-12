@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour
     public float attackwait = 1.3f;
 
     public GameObject[] weapons = new GameObject[2];
-    public static int weaponActive = 5;
+    public static int weaponActive = 5; //5
 
     private Vector3 moveVector;
     private float speedMove = 100;
@@ -158,10 +158,13 @@ public class PlayerController : MonoBehaviour
                 }
             }
 
-            Vector3 newDir = Vector3.RotateTowards(transform.forward, (enemy.transform.position - transform.position), 5, 0.0F);
+            /*Vector3 newDir = Vector3.RotateTowards(transform.forward, (enemy.transform.position - transform.position), 5, 0.0F);
 
-            transform.rotation = Quaternion.LookRotation(newDir);
+            transform.rotation = Quaternion.LookRotation(newDir);*/
 
+            Vector3 direction = (enemy.transform.position - transform.position).normalized;
+            Quaternion lookrotation = Quaternion.LookRotation(direction);
+            transform.rotation = Quaternion.Slerp(transform.rotation, lookrotation, 1);
 
         }
         yield return new WaitForSecondsRealtime(0.2f);
